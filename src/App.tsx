@@ -1,7 +1,10 @@
+import { Suspense, lazy } from 'react'
 import './index.css'
 import { CursorProvider } from './components/Cursor'
 import GrainBlob from './components/GrainBlob'
 import Header from './components/Header'
+
+const StarField = lazy(() => import('./components/StarField'))
 import Hero from './components/Hero'
 import BioCode from './components/BioCode'
 import Skills from './components/Skills'
@@ -14,6 +17,9 @@ export default function App() {
     <CursorProvider>
       {/* Atmospheric layer (z-0) */}
       <GrainBlob />
+      <Suspense fallback={null}>
+        <StarField />
+      </Suspense>
 
       {/* Navigation */}
       <Header />

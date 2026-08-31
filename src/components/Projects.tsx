@@ -121,17 +121,18 @@ function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: n
             position: 'absolute', inset: 0,
             width: '100%', height: '100%',
             objectFit: 'cover',
-            filter: hovered ? 'saturate(1.15) brightness(0.45)' : 'saturate(0.7) brightness(0.55)',
+            filter: hovered ? 'saturate(1.25) brightness(0.6)' : 'saturate(1.05) brightness(0.9)',
             transform: hovered ? 'scale(1.08)' : 'scale(1)',
             transition: 'transform 0.6s cubic-bezier(0.2,0.8,0.2,1), filter 0.6s ease',
           }}
         />
 
-        {/* Gradient overlay */}
+        {/* Legibility overlay (anchored to the text side) */}
         <div style={{
-          position: 'absolute', inset: 0,
+          position: 'absolute',
+          inset: 0,
           zIndex: 1,
-          background: 'linear-gradient(125deg, rgba(10,10,15,0.92), rgba(10,10,15,0.15))',
+          background: 'linear-gradient(105deg, rgba(10,10,15,0.94) 0%, rgba(10,10,15,0.55) 38%, rgba(10,10,15,0.05) 68%, transparent 80%)',
           pointerEvents: 'none',
         }} />
 
@@ -229,58 +230,58 @@ export default function Projects() {
       }}
     >
       <div className="max-frame">
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 40 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.7 }}
-        style={{ marginBottom: 56 }}
-      >
-        <p className="section-kicker">04 / SELECTED SIGNALS</p>
-        <h2 className="section-title" style={{ marginBottom: 0 }}>
-          Work with a point of view.
-        </h2>
-      </motion.div>
-
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 520px), 1fr))',
-        gap: 24,
-      }}>
-        {PROJECTS.map((project, i) => (
-          <ProjectCard key={project.id} project={project} index={i} />
-        ))}
-      </div>
-
-      {/* GitHub link */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={isInView ? { opacity: 1 } : {}}
-        transition={{ delay: 0.5 }}
-        style={{ textAlign: 'center', marginTop: 56 }}
-      >
-        <a
-          href="https://github.com/AboveAlljnr"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: 10,
-            padding: '14px 30px',
-            fontFamily: 'var(--font-display)',
-            fontSize: 14,
-            fontWeight: 600,
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.6)',
-            border: '1px solid rgba(255,255,255,0.12)',
-            borderRadius: 10,
-            cursor: 'none',
-            transition: 'color 0.2s, border-color 0.2s',
-          }}
+        <motion.div
+          ref={ref}
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7 }}
+          style={{ marginBottom: 56 }}
         >
-          View All on GitHub →
-        </a>
-      </motion.div>
+          <p className="section-kicker">04 / SELECTED SIGNALS</p>
+          <h2 className="section-title" style={{ marginBottom: 0 }}>
+            Work with a point of view.
+          </h2>
+        </motion.div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 520px), 1fr))',
+          gap: 24,
+        }}>
+          {PROJECTS.map((project, i) => (
+            <ProjectCard key={project.id} project={project} index={i} />
+          ))}
+        </div>
+
+        {/* GitHub link */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.5 }}
+          style={{ textAlign: 'center', marginTop: 56 }}
+        >
+          <a
+            href="https://github.com/AboveAlljnr"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 10,
+              padding: '14px 30px',
+              fontFamily: 'var(--font-display)',
+              fontSize: 14,
+              fontWeight: 600,
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.6)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: 10,
+              cursor: 'none',
+              transition: 'color 0.2s, border-color 0.2s',
+            }}
+          >
+            View All on GitHub →
+          </a>
+        </motion.div>
       </div>
     </section>
   )
