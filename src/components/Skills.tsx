@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { useCursor } from './Cursor'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const BENTO_TILES = [
   {
@@ -62,6 +63,7 @@ const MARQUEE_ITEMS = [
 
 function BentoTile({ tile, index }: { tile: typeof BENTO_TILES[0]; index: number }) {
   const { setVariant } = useCursor()
+  const isMobile = useIsMobile()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-60px' })
   const dark = tile.dark
@@ -79,7 +81,7 @@ function BentoTile({ tile, index }: { tile: typeof BENTO_TILES[0]; index: number
       onMouseEnter={() => setVariant('text')}
       onMouseLeave={() => setVariant('default')}
       style={{
-        gridColumn: `span ${tile.colSpan}`,
+        gridColumn: `span ${isMobile ? 12 : tile.colSpan}`,
         minHeight: 175,
         padding: '1.5rem',
         borderRadius: '1.2rem',

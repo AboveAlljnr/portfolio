@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { Variants } from 'framer-motion'
 import { Magnetic, useCursor } from './Cursor'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const ThreeScene = lazy(() => import('./ThreeScene'))
 
@@ -11,7 +12,41 @@ const HEADLINE_WORDS = ['COURAGE', 'AGBAVOR', '.']
 
 export default function Hero() {
   const prefersReduced = useReducedMotion()
+  const isMobile = useIsMobile()
   const { setVariant, setLabel } = useCursor()
+
+  const portrait = (
+    <motion.div
+      initial={{ opacity: 0, x: 40, rotate: isMobile ? 3 : 6 }}
+      animate={{ opacity: 1, x: 0, rotate: isMobile ? 3 : 6 }}
+      transition={{ duration: 0.9, delay: 0.3, ease: EASE }}
+      style={{
+        position: isMobile ? 'relative' : 'absolute',
+        right: isMobile ? 'auto' : '7vw',
+        bottom: isMobile ? 'auto' : '4rem',
+        width: isMobile ? 'min(56vw, 240px)' : 'min(27vw, 340px)',
+        aspectRatio: '3/4',
+        margin: isMobile ? 'clamp(1.2rem, 4vw, 2rem) auto 0' : 0,
+        zIndex: 5,
+        border: '1px solid rgba(255,255,255,0.4)',
+        borderRadius: isMobile ? '1rem' : '1.2rem',
+        overflow: 'hidden',
+        background: 'var(--color-base-2)',
+        boxShadow: isMobile ? '10px 10px 0 var(--color-pink)' : '14px 14px 0 var(--color-pink)',
+      }}
+    >
+      <img
+        src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg"
+        alt="Portrait"
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          filter: 'saturate(1.1) contrast(1.05)',
+        }}
+      />
+    </motion.div>
+  )
 
   return (
     <section
@@ -31,40 +66,11 @@ export default function Hero() {
         </Suspense>
       </div>
 
-      {/* Portrait */}
-      <motion.div
-        initial={{ opacity: 0, x: 40, rotate: 6 }}
-        animate={{ opacity: 1, x: 0, rotate: 6 }}
-        transition={{ duration: 0.9, delay: 0.3, ease: EASE }}
-        style={{
-          position: 'absolute',
-          right: '7vw',
-          bottom: '4rem',
-          width: 'min(27vw, 340px)',
-          aspectRatio: '3/4',
-          transform: 'rotate(6deg)',
-          zIndex: 2,
-          border: '1px solid rgba(255,255,255,0.4)',
-          borderRadius: '1.2rem',
-          overflow: 'hidden',
-          background: 'var(--color-base-2)',
-          boxShadow: '14px 14px 0 var(--color-pink)',
-        }}
-      >
-        <img
-          src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg"
-          alt="Portrait"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            filter: 'saturate(1.1) contrast(1.05)',
-          }}
-        />
-      </motion.div>
+      {/* Portrait (absolute, desktop) */}
+      {!isMobile && portrait}
 
       {/* Content */}
-      <div className="max-frame" style={{ position: 'relative', zIndex: 5, paddingTop: '7rem', paddingBottom: '4rem' }}>
+      <div className="max-frame" style={{ position: 'relative', zIndex: 5, paddingTop: isMobile ? '6rem' : '7rem', paddingBottom: isMobile ? '7rem' : '4rem' }}>
         {/* Eyebrow */}
         <motion.p
           initial={{ opacity: 0, y: -12 }}
@@ -106,6 +112,9 @@ export default function Hero() {
             </motion.span>
           ))}
         </motion.h1>
+
+        {/* Portrait (in-flow, mobile) */}
+        {isMobile && portrait}
 
         {/* Role line */}
         <motion.p

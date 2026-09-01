@@ -166,6 +166,7 @@ export default function Footer() {
             display: 'flex',
             alignItems: 'center',
             gap: 16,
+            flexWrap: 'wrap',
           }}>
             {/* Terminal-style prompt */}
             <div style={{

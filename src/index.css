@@ -111,6 +111,88 @@ a { color: inherit; text-decoration: none; }
   100% { transform: scale(2.5); opacity: 0; }
 }
 
+/* ── Glitch Text Effect ────────────────────────────────────── */
+
+@keyframes glitch-1 {
+  0%, 100% { clip-path: inset(0 0 90% 0); transform: translate(0); }
+  10%      { clip-path: inset(20% 0 60% 0); transform: translate(-3px, 1px); }
+  20%      { clip-path: inset(60% 0 10% 0); transform: translate(3px, -1px); }
+  30%      { clip-path: inset(0 0 90% 0); transform: translate(0); }
+}
+
+@keyframes glitch-2 {
+  0%, 100% { clip-path: inset(70% 0 0 0); transform: translate(0); }
+  15%      { clip-path: inset(10% 0 80% 0); transform: translate(2px, -1px); }
+  25%      { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 1px); }
+  35%      { clip-path: inset(70% 0 0 0); transform: translate(0); }
+}
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(100deg, var(--color-blue), var(--color-violet), var(--color-pink), var(--color-lime));
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.glitch-text::before {
+  animation: glitch-1 3s infinite linear alternate-reverse;
+  color: var(--color-violet);
+  opacity: 0.8;
+  filter: hue-rotate(90deg);
+}
+
+.glitch-text::after {
+  animation: glitch-2 2.5s infinite linear alternate-reverse;
+  color: var(--color-pink);
+  opacity: 0.8;
+  filter: hue-rotate(180deg);
+}
+
+@keyframes pulse-glow {
+  0%, 100% { text-shadow: 0 0 10px rgba(40,121,255,0.3); }
+  50%      { text-shadow: 0 0 30px rgba(255,60,166,0.5), 0 0 60px rgba(40,121,255,0.2); }
+}
+
+/* ── Scroll-driven entrance animations (progressive enhancement) ── */
+
+@supports (animation-timeline: view()) {
+  @keyframes hero-stats-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .stats-animate {
+    animation: hero-stats-in 0.8s var(--ease-out-expo) both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+
+  @keyframes project-card-in {
+    from { opacity: 0; transform: translateY(30px) rotateX(10deg); }
+    to   { opacity: 1; transform: translateY(0) rotateX(0); }
+  }
+
+  .project-card-animate {
+    animation: project-card-in 0.6s var(--ease-out-expo) both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+}
+
 @keyframes hero-in {
   to { opacity: 1; transform: translateY(0) rotate(0); }
 }
@@ -186,6 +268,32 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -0.04em;
   margin: 0.65rem 0 2.3rem;
   color: var(--color-paper);
+}
+
+/* ── Scroll-driven animations (progressive enhancement) ─────────── */
+
+@supports (animation-timeline: scroll()) {
+  @keyframes hero-stats-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .stats-animate {
+    animation: hero-stats-in 0.8s var(--ease-out-expo) both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+
+  @keyframes project-card-in {
+    from { opacity: 0; transform: translateY(30px) rotateX(10deg); }
+    to   { opacity: 1; transform: translateY(0) rotateX(0); }
+  }
+
+  .project-card-animate {
+    animation: project-card-in 0.6s var(--ease-out-expo) both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
 }
 
 /* ── Reduced motion overrides ───────────────────────────────────── */
