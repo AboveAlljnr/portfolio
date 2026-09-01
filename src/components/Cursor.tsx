@@ -59,6 +59,32 @@ export function CursorProvider({ children }: { children: React.ReactNode }) {
     <CursorContext.Provider value={{ setVariant, setLabel }}>
       {!isTouch && (
         <>
+          {/* Trail dots - fading cascade behind cursor */}
+          {[0, 1, 2, 3].map((i) => {
+            const trailX = useSpring(cursorX, { stiffness: 60 - i * 15, damping: 30 - i * 4, mass: 0.4 + i * 0.1 })
+            const trailY = useSpring(cursorY, { stiffness: 60 - i * 15, damping: 30 - i * 4, mass: 0.4 + i * 0.1 })
+            return (
+              <motion.div
+                key={i}
+                style={{
+                  position: 'fixed',
+                  top: 0, left: 0,
+                  x: trailX,
+                  y: trailY,
+                  translateX: '-50%',
+                  translateY: '-50%',
+                  width: 5 - i * 1,
+                  height: 5 - i * 1,
+                  borderRadius: '50%',
+                  backgroundColor: i === 0 ? 'var(--color-lime)' : `color-mix(in srgb, var(--color-lime) ${(0.4 - i * 0.1) * 100}%, transparent)`,
+                  pointerEvents: 'none',
+                  zIndex: 9999 - i,
+                  opacity: 0.6 - i * 0.12,
+                }}
+              />
+            )
+          })}
+
           {/* Ring */}
           <motion.div
             style={{
@@ -69,7 +95,7 @@ export function CursorProvider({ children }: { children: React.ReactNode }) {
               translateX: '-50%',
               translateY: '-50%',
               pointerEvents: 'none',
-              zIndex: 9999,
+              zIndex: 10000,
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
@@ -97,23 +123,6 @@ export function CursorProvider({ children }: { children: React.ReactNode }) {
               </motion.span>
             )}
           </motion.div>
-          {/* Dot */}
-          <motion.div
-            style={{
-              position: 'fixed',
-              top: 0, left: 0,
-              x: dotX,
-              y: dotY,
-              translateX: '-50%',
-              translateY: '-50%',
-              width: 5,
-              height: 5,
-              borderRadius: '50%',
-              backgroundColor: variant === 'default' ? '#c8ff3d' : 'transparent',
-              pointerEvents: 'none',
-              zIndex: 10000,
-            }}
-          />
         </>
       )}
       {children}

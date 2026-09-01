@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { useCursor } from './Cursor'
 
@@ -19,7 +19,7 @@ const CONTENT: Record<TabId, React.ReactNode> = {
           role: 'Full-Stack Developer & Systems Engineer',
           company: 'Freelance / Independent Projects',
           period: '2022 — Present',
-          color: '#2563ff',
+          color: 'var(--color-accent-1)',
           points: [
             'Built and deployed 10+ full-stack web applications for clients across Ghana and internationally.',
             'Architected RESTful and GraphQL APIs consumed by web and mobile frontends.',
@@ -31,7 +31,7 @@ const CONTENT: Record<TabId, React.ReactNode> = {
           role: 'Operations Specialist & Systems Analyst',
           company: 'Enterprise Project Engagements',
           period: '2021 — 2023',
-          color: '#7c3aed',
+          color: 'var(--color-accent-2)',
           points: [
             'Led end-to-end process mapping and workflow automation for business operations.',
             'Designed ERP integration strategies aligning IT systems with organisational objectives.',
@@ -48,7 +48,7 @@ const CONTENT: Record<TabId, React.ReactNode> = {
           style={{
             padding: 28,
             borderRadius: 14,
-            background: 'rgba(255,255,255,0.03)',
+            background: 'color-mix(in srgb, var(--color-paper) 4%, transparent)',
             border: `1px solid ${job.color}44`,
             borderLeft: `3px solid ${job.color}`,
             position: 'relative',
@@ -56,7 +56,7 @@ const CONTENT: Record<TabId, React.ReactNode> = {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
             <div>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: '#f0f0ff', marginBottom: 4 }}>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: 'var(--color-paper)', marginBottom: 4 }}>
                 {job.role}
               </h3>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: job.color }}>{job.company}</div>
@@ -89,7 +89,7 @@ const CONTENT: Record<TabId, React.ReactNode> = {
           institution: 'IPMC College of Technology',
           location: 'Accra, Ghana',
           grade: 'Distinctions',
-          color: '#e91e8c',
+          color: 'var(--color-accent-3)',
           distinctions: [
             'Back-End Web Development',
             'Information Systems & Organisations',
@@ -102,7 +102,7 @@ const CONTENT: Record<TabId, React.ReactNode> = {
           institution: 'IPMC College of Technology',
           location: 'Accra, Ghana',
           grade: 'Merit',
-          color: '#84cc16',
+          color: 'var(--color-accent-4)',
           distinctions: ['React & Modern JavaScript', 'Node.js & Database Design'],
         },
       ].map((edu, i) => (
@@ -113,13 +113,13 @@ const CONTENT: Record<TabId, React.ReactNode> = {
           transition={{ delay: i * 0.12, duration: 0.5 }}
           style={{
             padding: 28, borderRadius: 14,
-            background: 'rgba(255,255,255,0.03)',
+            background: 'color-mix(in srgb, var(--color-paper) 4%, transparent)',
             border: `1px solid ${edu.color}44`,
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
             <div>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: '#f0f0ff', marginBottom: 4 }}>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: 'var(--color-paper)', marginBottom: 4 }}>
                 {edu.degree}
               </h3>
               <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: edu.color, marginBottom: 4 }}>{edu.field}</div>
@@ -163,21 +163,21 @@ const CONTENT: Record<TabId, React.ReactNode> = {
         {
           name: 'Portfolio Design System',
           desc: 'Open-sourced component library and design tokens built from the ground up for high-performance React portfolios.',
-          color: '#2563ff',
+          color: 'var(--color-accent-1)',
           link: 'https://github.com/AboveAlljnr',
           lang: 'TypeScript',
         },
         {
           name: 'OpsSync CLI Utilities',
           desc: 'Command-line toolkit for automating operational workflows, report generation, and cross-platform ERP data sync.',
-          color: '#84cc16',
+          color: 'var(--color-accent-4)',
           link: 'https://github.com/AboveAlljnr',
           lang: 'Python',
         },
         {
           name: 'NodeAPI Starter Kit',
           desc: 'Production-ready Node.js API template with Prisma ORM, JWT authentication, and Swagger-auto documentation.',
-          color: '#7c3aed',
+          color: 'var(--color-accent-2)',
           link: 'https://github.com/AboveAlljnr',
           lang: 'Node.js',
         },
@@ -194,14 +194,14 @@ const CONTENT: Record<TabId, React.ReactNode> = {
           style={{
             display: 'block',
             padding: 24, borderRadius: 14,
-            background: 'rgba(255,255,255,0.03)',
+            background: 'color-mix(in srgb, var(--color-paper) 4%, transparent)',
             border: `1px solid ${proj.color}33`,
             cursor: 'none',
             textDecoration: 'none',
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: '#f0f0ff' }}>{proj.name}</h3>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: 'var(--color-paper)' }}>{proj.name}</h3>
             <span style={{
               padding: '3px 10px', borderRadius: 20, fontSize: 11, fontFamily: 'var(--font-mono)',
               background: `${proj.color}18`, color: proj.color, border: `1px solid ${proj.color}44`,
@@ -221,14 +221,14 @@ const CONTENT: Record<TabId, React.ReactNode> = {
           org: 'Developer Community Ghana',
           period: '2022 — Present',
           desc: 'Mentored aspiring developers across Accra, running workshops on web fundamentals, React, and career development in tech.',
-          color: '#e91e8c',
+          color: 'var(--color-accent-3)',
         },
         {
           role: 'Open Source Contributor',
           org: 'Various Ghana Tech Collectives',
           period: '2021 — Present',
           desc: 'Contributed to open-source tooling projects aimed at solving local business and operational challenges through software.',
-          color: '#7c3aed',
+          color: 'var(--color-accent-2)',
         },
       ].map((vol, i) => (
         <motion.div
@@ -238,13 +238,13 @@ const CONTENT: Record<TabId, React.ReactNode> = {
           transition={{ delay: i * 0.1 }}
           style={{
             padding: 24, borderRadius: 14,
-            background: 'rgba(255,255,255,0.03)',
+            background: 'color-mix(in srgb, var(--color-paper) 4%, transparent)',
             border: `1px solid ${vol.color}33`,
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, marginBottom: 10 }}>
             <div>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: '#f0f0ff' }}>{vol.role}</h3>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, color: 'var(--color-paper)' }}>{vol.role}</h3>
               <div style={{ fontSize: 13, fontFamily: 'var(--font-mono)', color: vol.color, marginTop: 2 }}>{vol.org}</div>
             </div>
             <div style={{
@@ -261,9 +261,43 @@ const CONTENT: Record<TabId, React.ReactNode> = {
 
 export default function About() {
   const [activeTab, setActiveTab] = useState<TabId>('work')
+  const [timelinePos, setTimelinePos] = useState(0)
   const { setVariant } = useCursor()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-80px' })
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
+
+  // Handle keyboard navigation for timeline
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, tabId: TabId) => {
+    const currentIndex = TABS.findIndex(t => t.id === tabId)
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault()
+      const nextIndex = (currentIndex + 1) % TABS.length
+      tabRefs.current[nextIndex]?.focus()
+      setActiveTab(TABS[nextIndex].id)
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault()
+      const prevIndex = (currentIndex - 1 + TABS.length) % TABS.length
+      tabRefs.current[prevIndex]?.focus()
+      setActiveTab(TABS[prevIndex].id)
+    }
+  }, [])
+
+  // Update timeline position based on active tab
+  useEffect(() => {
+    const currentIndex = TABS.findIndex(t => t.id === activeTab)
+    if (currentIndex >= 0) {
+      const tabElement = tabRefs.current[currentIndex]
+      if (tabElement) {
+        const rect = tabElement.getBoundingClientRect()
+        const containerRect = tabElement.parentElement?.getBoundingClientRect()
+        if (containerRect) {
+          const pos = ((rect.left + rect.width / 2) - containerRect.left) / containerRect.width
+          setTimelinePos(pos)
+        }
+      }
+    }
+  }, [activeTab])
 
   return (
     <section
@@ -304,60 +338,137 @@ export default function About() {
         </p>
       </motion.div>
 
-      {/* Tab bar */}
+      {/* Timeline Scrubber */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : {}}
         transition={{ delay: 0.2 }}
-        style={{
+        style={{ marginBottom: 48 }}
+      >
+        {/* Timeline track */}
+        <div style={{
+          position: 'relative',
+          height: 4,
+          background: 'color-mix(in srgb, var(--color-paper) 15%, transparent)',
+          borderRadius: 2,
+          marginBottom: 24,
+          cursor: 'pointer',
+        }}
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect()
+            const x = (e.clientX - rect.left) / rect.width
+            const index = Math.min(TABS.length - 1, Math.max(0, Math.floor(x * TABS.length)))
+            setActiveTab(TABS[index].id)
+          }}
+        >
+          {/* Active indicator */}
+          <motion.div
+            style={{
+              position: 'absolute',
+              left: `${timelinePos * 100}%`,
+              top: -3,
+              width: 10,
+              height: 10,
+              borderRadius: '50%',
+              background: 'var(--color-lime)',
+              boxShadow: '0 0 14px var(--color-lime)',
+              y: -1,
+              pointerEvents: 'none',
+            }}
+            animate={{ left: `${timelinePos * 100}%` }}
+            transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+          />
+          
+          {/* Progress fill */}
+          <motion.div
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              height: '100%',
+              width: `${timelinePos * 100}%`,
+              background: 'linear-gradient(90deg, var(--color-lime), var(--color-pink))',
+              borderRadius: 2,
+            }}
+            animate={{ width: `${timelinePos * 100}%` }}
+            transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+          />
+        </div>
+
+        {/* Tab buttons */}
+        <div style={{
           display: 'flex',
           gap: 4,
-          marginBottom: 32,
-          borderTop: '1px solid rgba(255,255,255,0.2)',
-          borderBottom: '1px solid rgba(255,255,255,0.2)',
           flexWrap: 'wrap',
-        }}
-      >
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            onMouseEnter={() => setVariant('link')}
-            onMouseLeave={() => setVariant('default')}
-            style={{
-              position: 'relative',
-              padding: '1.1rem 2rem 1.1rem 0',
-              marginRight: '1.5rem',
-              background: 'transparent',
-              border: 'none',
-              cursor: 'none',
-              fontFamily: 'var(--font-mono)',
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: '0.07em',
-              textTransform: 'uppercase',
-              color: activeTab === tab.id ? 'var(--color-lime)' : 'var(--color-text-dim)',
-              transition: 'color 0.25s ease',
-            }}
-          >
-            {activeTab === tab.id && (
-              <motion.div
-                layoutId="tab-underline"
+        }}>
+          {TABS.map((tab, i) => {
+            const isActive = activeTab === tab.id
+            const prevTab = TABS[(i - 1 + TABS.length) % TABS.length]
+            return (
+              <button
+                key={tab.id}
+                ref={(el) => { tabRefs.current[i] = el }}
+                onClick={() => setActiveTab(tab.id)}
+                onKeyDown={(e) => handleKeyDown(e, tab.id)}
+                onMouseEnter={() => setVariant('link')}
+                onMouseLeave={() => setVariant('default')}
+                aria-label={`${tab.label} — ${isActive ? 'current' : 'not selected'}`}
+                aria-pressed={isActive}
                 style={{
+                  position: 'relative',
+                  padding: '1.1rem 1.5rem 1.1rem 0',
+                  marginRight: '0.5rem',
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'none',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: '0.07em',
+                  textTransform: 'uppercase',
+                  color: isActive ? 'var(--color-lime)' : 'var(--color-text-dim)',
+                  transition: 'color 0.25s ease',
+                  outline: 'none',
+                  flex: '1 1 auto',
+                  minWidth: 120,
+                  textAlign: 'left',
+                }}
+              >
+                {/* Timeline marker */}
+                <span style={{
                   position: 'absolute',
                   left: 0,
-                  right: 0,
-                  bottom: -1,
-                  height: 3,
-                  background: 'var(--color-lime)',
-                  boxShadow: '0 0 14px var(--color-lime)',
-                }}
-                transition={{ type: 'spring', stiffness: 400, damping: 35 }}
-              />
-            )}
-            <span style={{ position: 'relative', zIndex: 1 }}>{tab.label}</span>
-          </button>
-        ))}
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: isActive ? 12 : 8,
+                  height: isActive ? 12 : 8,
+                  borderRadius: '50%',
+                  background: isActive ? 'var(--color-lime)' : 'color-mix(in srgb, var(--color-paper) 30%, transparent)',
+                  transition: 'all 0.3s var(--ease-spring)',
+                  boxShadow: isActive ? '0 0 10px var(--color-lime)' : 'none',
+                }} />
+                <span style={{ position: 'relative', zIndex: 1 }}>{tab.label}</span>
+                
+                {/* Underline for active tab */}
+                {isActive && (
+                  <motion.div
+                    layoutId="tab-underline"
+                    style={{
+                      position: 'absolute',
+                      left: 20,
+                      right: 0,
+                      bottom: 0,
+                      height: 3,
+                      background: 'var(--color-lime)',
+                      boxShadow: '0 0 14px var(--color-lime)',
+                    }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+                  />
+                )}
+              </button>
+            )
+          })}
+        </div>
       </motion.div>
 
       {/* Tab content */}

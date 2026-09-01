@@ -2,23 +2,23 @@ import { useMemo, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useReducedMotion } from 'framer-motion'
+import { useTheme } from './ThemeProvider'
 
 const PARTICLE_COUNT = 420
 const SPREAD_X = 40
 const SPREAD_Y = 26
 const SPREAD_Z = 16
 
-// Editorial accent palette (blue / violet / pink / lime / orange)
-const ACCENTS = ['#2879ff', '#9b5cff', '#ff3ca6', '#c8ff3d', '#ff7a2f']
-
 function StarPoints() {
   const ref = useRef<THREE.Points>(null)
   const prefersReduced = useReducedMotion()
+  const { accent } = useTheme()
 
   const { positions, colors } = useMemo(() => {
     const positions = new Float32Array(PARTICLE_COUNT * 3)
     const colors = new Float32Array(PARTICLE_COUNT * 3)
     const base = new THREE.Color()
+    const ACCENTS = [accent(1), accent(2), accent(3), accent(4), accent(5)]
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       positions[i * 3] = (Math.random() - 0.5) * SPREAD_X
@@ -32,7 +32,8 @@ function StarPoints() {
     }
 
     return { positions, colors }
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accent])
 
   useFrame((state) => {
     if (prefersReduced || !ref.current) return

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Magnetic, useCursor } from './Cursor'
 
@@ -19,11 +19,54 @@ const SOCIAL_LINKS = [
   },
 ]
 
+function TypewriterText({ text, active }: { text: string; active: boolean }) {
+  const [displayed, setDisplayed] = useState('')
+  const [showCursor, setShowCursor] = useState(true)
+
+  useEffect(() => {
+    if (!active) {
+      setDisplayed('')
+      return
+    }
+
+    let currentIndex = 0
+    const interval = setInterval(() => {
+      if (currentIndex <= text.length) {
+        setDisplayed(text.slice(0, currentIndex))
+        currentIndex++
+      } else {
+        clearInterval(interval)
+      }
+    }, 45)
+
+    return () => clearInterval(interval)
+  }, [active, text])
+
+  useEffect(() => {
+    if (!active) return
+    const cursorInterval = setInterval(() => {
+      setShowCursor(prev => !prev)
+    }, 530)
+    return () => clearInterval(cursorInterval)
+  }, [active])
+
+  return (
+    <span>
+      {displayed}
+      <span style={{
+        color: 'var(--color-lime)',
+        animation: showCursor ? 'blink 1s step-end infinite' : 'none',
+      }}>▋</span>
+    </span>
+  )
+}
+
 export default function Footer() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-80px' })
   const { setVariant, setLabel } = useCursor()
   const [copied, setCopied] = useState(false)
+  const [emailHovered, setEmailHovered] = useState(false)
 
   const copyEmail = () => {
     navigator.clipboard.writeText(EMAIL)
@@ -40,7 +83,7 @@ export default function Footer() {
         zIndex: 10,
         paddingTop: 'clamp(5rem, 11vw, 10rem)',
         paddingBottom: '3rem',
-        borderTop: '1px solid rgba(255,255,255,0.15)',
+        borderTop: '1px solid var(--color-border)',
       }}
     >
       <div className="max-frame">
@@ -93,7 +136,7 @@ export default function Footer() {
             <a
               href={`mailto:${EMAIL}`}
               onMouseEnter={() => { setVariant('button'); setLabel("LET'S TALK") }}
-              onMouseLeave={() => { setVariant('default'); setLabel('') }}
+              onMouseLeave={() => setVariant('default')}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -117,27 +160,58 @@ export default function Footer() {
             </a>
           </Magnetic>
 
-          <motion.button
-            onClick={copyEmail}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            onMouseEnter={() => setVariant('link')}
-            onMouseLeave={() => setVariant('default')}
-            style={{
-              display: 'block',
-              margin: '20px 0 0',
-              background: 'none',
-              border: 'none',
+          {/* Typewriter email with copy */}
+          <div style={{
+            margin: '20px 0 0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 16,
+          }}>
+            {/* Terminal-style prompt */}
+            <div style={{
               fontFamily: 'var(--font-mono)',
               fontSize: 13,
-              color: copied ? 'var(--color-lime)' : 'var(--color-text-dim)',
-              cursor: 'none',
-              letterSpacing: '0.04em',
-              transition: 'color 0.3s ease',
-            }}
-          >
-            {copied ? '✓ Copied!' : `${EMAIL} · click to copy`}
-          </motion.button>
+              color: 'var(--color-lime)',
+            }}>
+              <span style={{ opacity: 0.6 }}>$</span> contact
+            </div>
+            
+            {/* Email typewriter */}
+            <motion.button
+              onClick={copyEmail}
+              onMouseEnter={() => { setEmailHovered(true); setVariant('link') }}
+              onMouseLeave={() => { setEmailHovered(false); setVariant('default') }}
+              whileHover={{ x: 4 }}
+              style={{
+                background: 'none',
+                border: 'none',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 13,
+                color: copied ? 'var(--color-lime)' : emailHovered ? 'var(--color-text)' : 'var(--color-text-dim)',
+                cursor: 'none',
+                letterSpacing: '0.02em',
+                transition: 'color 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 4,
+              }}
+            >
+              <span style={{
+                padding: '2px 8px',
+                borderRadius: 4,
+                background: 'rgba(200,255,61,0.1)',
+                border: '1px solid rgba(200,255,61,0.2)',
+                marginRight: 4,
+              }}>
+                <TypewriterText text={EMAIL} active={emailHovered} />
+              </span>
+              {copied ? (
+                <span style={{ color: 'var(--color-lime)' }}>✓</span>
+              ) : (
+                <span style={{ opacity: 0.5, fontSize: 11 }}>[copy]</span>
+              )}
+            </motion.button>
+          </div>
         </motion.div>
 
         {/* Social icons */}
@@ -149,7 +223,7 @@ export default function Footer() {
             display: 'flex',
             gap: 32,
             flexWrap: 'wrap',
-            borderTop: '1px solid rgba(255,255,255,0.15)',
+            borderTop: '1px solid var(--color-border)',
             paddingTop: '1.5rem',
           }}
         >
@@ -184,7 +258,7 @@ export default function Footer() {
         </motion.div>
 
         {/* Divider + copyright */}
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.15)', marginTop: '2.5rem', paddingTop: 24 }}>
+        <div style={{ borderTop: '1px solid var(--color-border)', marginTop: '2.5rem', paddingTop: 24 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
             <div style={{
               fontFamily: 'var(--font-body)',
@@ -205,6 +279,14 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
+      {/* Cursor blink animation */}
+      <style>{`
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+      `}</style>
     </footer>
   )
 }

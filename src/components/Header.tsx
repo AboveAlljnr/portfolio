@@ -47,7 +47,7 @@ export default function Header() {
         padding: scrolled ? '12px 40px' : '20px 40px',
         background: scrolled ? 'rgba(10,10,15,0.85)' : 'transparent',
         backdropFilter: scrolled ? 'blur(18px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.12)' : '1px solid transparent',
+        borderBottom: scrolled ? '1px solid var(--color-border)' : '1px solid transparent',
         transition: 'padding 0.4s ease, background 0.4s ease, border-color 0.4s ease',
       }}
     >
@@ -93,6 +93,19 @@ export default function Header() {
                   }}
                 >
                   {link.label}
+                  {/* Creative underline effect */}
+                  <span style={{
+                    position: 'absolute',
+                    bottom: 4,
+                    left: '50%',
+                    width: isActive ? '80%' : '0%',
+                    height: 1,
+                    background: 'linear-gradient(90deg, var(--color-lime), var(--color-violet))',
+                    transform: 'translateX(-50%)',
+                    transition: 'width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease',
+                    opacity: isActive ? 1 : 0,
+                    boxShadow: isActive ? '0 0 8px var(--color-lime)' : 'none',
+                  }} />
                 </a>
               </Magnetic>
             )

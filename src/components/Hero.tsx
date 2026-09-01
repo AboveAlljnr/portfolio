@@ -101,7 +101,7 @@ export default function Hero() {
                 fontWeight: 900,
               }}
             >
-              {word === 'AGBAVOR' ? <span className="gradient-text">{word}</span> : word}
+              {word === 'AGBAVOR' ? <span className="gradient-text glitch-text" data-text={word}>{word}</span> : word}
               {word !== '.' && ' '}
             </motion.span>
           ))}
@@ -115,7 +115,7 @@ export default function Hero() {
           style={{
             maxWidth: 560,
             fontSize: 'clamp(1rem, 2vw, 1.35rem)',
-            color: '#d8d3e7',
+            color: 'var(--color-text-muted)',
             lineHeight: 1.55,
           }}
         >
@@ -166,6 +166,7 @@ export default function Hero() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.1 }}
           style={{ display: 'flex', gap: 44, marginTop: '4rem', flexWrap: 'wrap' }}
+          className="stats-animate"
         >
           {[
             { value: '3+', label: 'Years Experience' },
@@ -223,7 +224,7 @@ export default function Hero() {
           style={{
             width: 1.5,
             height: 40,
-            background: 'linear-gradient(180deg, rgba(255,255,255,0.4), transparent)',
+            background: 'linear-gradient(180deg, color-mix(in srgb, var(--color-paper) 40%, transparent), transparent)',
           }}
         />
       </motion.div>

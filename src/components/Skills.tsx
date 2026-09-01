@@ -7,42 +7,48 @@ const BENTO_TILES = [
     id: 'fullstack',
     num: '01',
     title: 'Full-Stack Development',
-    bg: '#2879ff',
+    bg: 'var(--color-accent-1)',
+    dark: false,
     colSpan: 5,
   },
   {
     id: 'backend',
     num: '02',
     title: 'Back-End Web Development',
-    bg: '#ff3ca6',
+    bg: 'var(--color-accent-3)',
+    dark: false,
     colSpan: 3,
   },
   {
     id: 'infosystems',
     num: '03',
     title: 'Information Systems',
-    bg: '#9b5cff',
+    bg: 'var(--color-accent-2)',
+    dark: false,
     colSpan: 4,
   },
   {
     id: 'pm',
     num: '04',
     title: 'IT Project Management',
-    bg: '#c8ff3d',
+    bg: 'var(--color-accent-4)',
+    dark: false,
     colSpan: 4,
   },
   {
     id: 'js',
     num: '05',
     title: 'JavaScript · Web Systems',
-    bg: '#172247',
+    bg: 'var(--color-tile-dark)',
+    dark: true,
     colSpan: 5,
   },
   {
     id: 'ops',
     num: '06',
     title: 'Operations Thinking',
-    bg: '#ff7a2f',
+    bg: 'var(--color-accent-5)',
+    dark: false,
     colSpan: 3,
   },
 ]
@@ -54,17 +60,13 @@ const MARQUEE_ITEMS = [
   'Linux', 'CI/CD', 'AWS', 'ERP Systems', 'Webpack', 'Vite',
 ]
 
-function isDark(bg: string) {
-  return bg === '#172247'
-}
-
 function BentoTile({ tile, index }: { tile: typeof BENTO_TILES[0]; index: number }) {
   const { setVariant } = useCursor()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-60px' })
-  const dark = isDark(tile.bg)
+  const dark = tile.dark
 
-  const fg = dark ? '#ffffff' : '#0a0a0f'
+  const fg = dark ? 'var(--color-paper)' : 'var(--color-ink)'
   const muted = dark ? 'rgba(255,255,255,0.7)' : 'rgba(10,10,15,0.6)'
 
   return (
@@ -155,8 +157,8 @@ export default function Skills() {
           marginTop: 48,
           overflow: 'hidden',
           borderRadius: 12,
-          background: 'rgba(255,255,255,0.03)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: 'color-mix(in srgb, var(--color-paper) 4%, transparent)',
+          border: '1px solid var(--color-border)',
           padding: '14px 0',
           position: 'relative',
         }}>
@@ -189,7 +191,7 @@ export default function Skills() {
                   padding: '0 20px',
                   fontFamily: 'var(--font-mono)',
                   fontSize: 13,
-                  color: 'rgba(255,255,255,0.45)',
+                  color: 'var(--color-text-muted)',
                   whiteSpace: 'nowrap',
                 }}
               >
