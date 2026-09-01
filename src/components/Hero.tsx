@@ -119,8 +119,8 @@ export default function Hero() {
             lineHeight: 1.55,
           }}
         >
-          Full-Stack Developer &amp; Operations Specialist. Turning knotty systems into
-          sharp, human-friendly experiences.
+          Full-Stack Developer &amp; Operations Specialist based in Accra. I take tangled
+          systems and make them feel straightforward.
         </motion.p>
 
         {/* CTA */}

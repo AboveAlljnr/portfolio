@@ -21,10 +21,10 @@ const CONTENT: Record<TabId, React.ReactNode> = {
           period: '2022 — Present',
           color: 'var(--color-accent-1)',
           points: [
-            'Built and deployed 10+ full-stack web applications for clients across Ghana and internationally.',
-            'Architected RESTful and GraphQL APIs consumed by web and mobile frontends.',
-            'Delivered complex e-commerce, SaaS, and analytics platforms from design to production.',
-            'Implemented CI/CD pipelines, cloud deployments (AWS, Vercel, Railway).',
+            'Built and shipped full-stack web apps for clients in Ghana and abroad — mostly e-commerce, dashboards, and internal tools.',
+            'Wrote the REST and GraphQL APIs that power both the web app and the mobile build.',
+            'Took projects from a blank screen to production — the architecture, the build, and the launch.',
+            'Set up CI/CD and deployed to AWS, Vercel, and Railway so releases stopped being a panic.',
           ],
         },
         {
@@ -33,10 +33,10 @@ const CONTENT: Record<TabId, React.ReactNode> = {
           period: '2021 — 2023',
           color: 'var(--color-accent-2)',
           points: [
-            'Led end-to-end process mapping and workflow automation for business operations.',
-            'Designed ERP integration strategies aligning IT systems with organisational objectives.',
-            'Produced stakeholder-facing analytical reports and dashboards.',
-            'Coordinated Agile project delivery cycles across cross-functional teams.',
+            'Mapped business processes and automated the parts that were quietly wasting people\u2019s time.',
+            'Wired ERP systems together so the IT and finance teams were finally looking at the same numbers.',
+            'Built reports and dashboards stakeholders actually read.',
+            'Ran Agile delivery cycles and kept cross functional teams pointed in the same direction.',
           ],
         },
       ].map((job, i) => (
@@ -162,21 +162,21 @@ const CONTENT: Record<TabId, React.ReactNode> = {
       {[
         {
           name: 'Portfolio Design System',
-          desc: 'Open-sourced component library and design tokens built from the ground up for high-performance React portfolios.',
+          desc: 'A small component library and design tokens I open-sourced after building this very site.',
           color: 'var(--color-accent-1)',
           link: 'https://github.com/AboveAlljnr',
           lang: 'TypeScript',
         },
         {
           name: 'OpsSync CLI Utilities',
-          desc: 'Command-line toolkit for automating operational workflows, report generation, and cross-platform ERP data sync.',
+          desc: 'A CLI for automating the boring parts of ops — report generation, data sync, and repetitive workflows.',
           color: 'var(--color-accent-4)',
           link: 'https://github.com/AboveAlljnr',
           lang: 'Python',
         },
         {
           name: 'NodeAPI Starter Kit',
-          desc: 'Production-ready Node.js API template with Prisma ORM, JWT authentication, and Swagger-auto documentation.',
+          desc: 'A Node.js API template I keep updating — Prisma ORM, JWT auth, and auto-generated Swagger docs.',
           color: 'var(--color-accent-2)',
           link: 'https://github.com/AboveAlljnr',
           lang: 'Node.js',
@@ -220,14 +220,14 @@ const CONTENT: Record<TabId, React.ReactNode> = {
           role: 'Tech Mentor & Coding Facilitator',
           org: 'Developer Community Ghana',
           period: '2022 — Present',
-          desc: 'Mentored aspiring developers across Accra, running workshops on web fundamentals, React, and career development in tech.',
+          desc: 'I mentor developers in Accra — workshops on web fundamentals, React, and how to actually get hired.',
           color: 'var(--color-accent-3)',
         },
         {
           role: 'Open Source Contributor',
           org: 'Various Ghana Tech Collectives',
           period: '2021 — Present',
-          desc: 'Contributed to open-source tooling projects aimed at solving local business and operational challenges through software.',
+          desc: 'I contribute to open-source tools that solve problems local businesses actually run into.',
           color: 'var(--color-accent-2)',
         },
       ].map((vol, i) => (
