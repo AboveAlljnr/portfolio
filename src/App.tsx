@@ -11,18 +11,25 @@ import About from './components/About'
 import Projects from './components/Projects'
 import Footer from './components/Footer'
 import ThemeSwitcher from './components/ThemeSwitcher'
+import ErrorBoundary from './components/ErrorBoundary'
+import { supportsWebGL } from './hooks/webgl'
 
 const StarField = lazy(() => import('./components/StarField'))
 
 export default function App() {
+  const webgl = supportsWebGL()
   return (
     <ThemeProvider>
       <CursorProvider>
         {/* Atmospheric layer (z-0) */}
         <GrainBlob />
-        <Suspense fallback={null}>
-          <StarField />
-        </Suspense>
+        {webgl && (
+          <ErrorBoundary>
+            <Suspense fallback={null}>
+              <StarField />
+            </Suspense>
+          </ErrorBoundary>
+        )}
 
         {/* Navigation */}
         <Header />

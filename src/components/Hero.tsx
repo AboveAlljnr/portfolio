@@ -3,6 +3,8 @@ import { motion, useReducedMotion } from 'framer-motion'
 import type { Variants } from 'framer-motion'
 import { Magnetic, useCursor } from './Cursor'
 import { useIsMobile } from '../hooks/useIsMobile'
+import ErrorBoundary from './ErrorBoundary'
+import { supportsWebGL } from '../hooks/webgl'
 
 const ThreeScene = lazy(() => import('./ThreeScene'))
 
@@ -61,9 +63,11 @@ export default function Hero() {
     >
       {/* Three.js Canvas Background */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 1, opacity: 0.7 }}>
-        <Suspense fallback={null}>
-          {!prefersReduced && <ThreeScene />}
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={null}>
+            {!prefersReduced && supportsWebGL() && <ThreeScene />}
+          </Suspense>
+        </ErrorBoundary>
       </div>
 
       {/* Portrait (absolute, desktop) */}
