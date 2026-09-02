@@ -1,109 +1,100 @@
-import { useEffect, useRef } from 'react'
+import { useMemo, useRef } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
 import { useReducedMotion } from 'framer-motion'
 import { useTheme } from './ThemeProvider'
 
-const PARTICLE_COUNT = 220
+const PARTICLE_COUNT = 420
+const SPREAD_X = 40
+const SPREAD_Y = 26
+const SPREAD_Z = 16
 
-export default function StarField() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+function StarPoints() {
+  const ref = useRef<THREE.Points>(null)
   const prefersReduced = useReducedMotion()
   const { accent } = useTheme()
 
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
+  const { positions, colors } = useMemo(() => {
+    const positions = new Float32Array(PARTICLE_COUNT * 3)
+    const colors = new Float32Array(PARTICLE_COUNT * 3)
+    const base = new THREE.Color()
+    const ACCENTS = [accent(1), accent(2), accent(3), accent(4), accent(5)]
 
-    let width = 0
-    let height = 0
-    let raf = 0
-    let particles: { x: number; y: number; r: number; vx: number; vy: number; color: string }[] = []
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * SPREAD_X
+      positions[i * 3 + 1] = (Math.random() - 0.5) * SPREAD_Y
+      positions[i * 3 + 2] = (Math.random() - 0.5) * SPREAD_Z
 
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
-      width = window.innerWidth
-      height = window.innerHeight
-      canvas.width = Math.floor(width * dpr)
-      canvas.height = Math.floor(height * dpr)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      base.set(ACCENTS[Math.floor(Math.random() * ACCENTS.length)])
+      colors[i * 3] = base.r
+      colors[i * 3 + 1] = base.g
+      colors[i * 3 + 2] = base.b
     }
 
-    const spawn = () => {
-      const ACCENTS = [accent(1), accent(2), accent(3), accent(4), accent(5)]
-      particles = Array.from({ length: PARTICLE_COUNT }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        r: Math.random() * 1.6 + 0.5,
-        vx: (Math.random() - 0.5) * 0.22,
-        vy: (Math.random() - 0.5) * 0.22 - 0.08,
-        color: ACCENTS[Math.floor(Math.random() * ACCENTS.length)],
-      }))
-    }
+    return { positions, colors }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accent])
 
-    const draw = () => {
-      ctx.clearRect(0, 0, width, height)
-      ctx.globalCompositeOperation = 'lighter'
-      for (const p of particles) {
-        ctx.globalAlpha = 0.75
-        ctx.fillStyle = p.color
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fill()
-      }
-      ctx.globalAlpha = 1
-      ctx.globalCompositeOperation = 'source-over'
-    }
+  useFrame((state) => {
+    if (prefersReduced || !ref.current) return
+    const t = state.clock.elapsedTime
+    const attr = ref.current.geometry.attributes.position as THREE.BufferAttribute
+    const arr = attr.array as Float32Array
 
-    const update = () => {
-      for (const p of particles) {
-        p.x += p.vx
-        p.y += p.vy
-        if (p.x < -4) p.x = width + 4
-        if (p.x > width + 4) p.x = -4
-        if (p.y < -4) p.y = height + 4
-        if (p.y > height + 4) p.y = -4
-      }
-    }
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const i3 = i * 3
+      // Slow per-particle vertical drift, gentle sine sway
+      let x = arr[i3] + Math.sin(t * 0.12 + i) * 0.003
+      let y = arr[i3 + 1] + Math.cos(t * 0.1 + i * 0.7) * 0.004
+      const z = arr[i3 + 2] + Math.sin(t * 0.08 + i * 1.3) * 0.002
 
-    const loop = () => {
-      update()
-      draw()
-      raf = requestAnimationFrame(loop)
-    }
+      // Wrap around vertical bounds so the field scrolls forever
+      if (y > SPREAD_Y * 0.5) y = -SPREAD_Y * 0.5
+      if (y < -SPREAD_Y * 0.5) y = SPREAD_Y * 0.5
+      if (x > SPREAD_X * 0.5) x = -SPREAD_X * 0.5
+      if (x < -SPREAD_X * 0.5) x = SPREAD_X * 0.5
 
-    resize()
-    spawn()
-    if (prefersReduced) {
-      draw()
-    } else {
-      loop()
+      arr[i3] = x
+      arr[i3 + 1] = y
+      arr[i3 + 2] = z
     }
-
-    window.addEventListener('resize', handleResize)
-    function handleResize() {
-      resize()
-      spawn()
-    }
-
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [prefersReduced, accent])
+    attr.needsUpdate = true
+  })
 
   return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden="true"
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-color" args={[colors, 3]} />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.12}
+        vertexColors
+        transparent
+        opacity={0.75}
+        sizeAttenuation
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  )
+}
+
+export default function StarField() {
+  return (
+    <Canvas
+      dpr={[1, 1.5]}
+      camera={{ position: [0, 0, 14], fov: 55 }}
+      gl={{ antialias: true, alpha: true }}
       style={{
         position: 'fixed',
         inset: 0,
-        width: '100%',
-        height: '100%',
         zIndex: 0,
         pointerEvents: 'none',
       }}
-    />
+      aria-hidden="true"
+    >
+      <StarPoints />
+    </Canvas>
   )
 }

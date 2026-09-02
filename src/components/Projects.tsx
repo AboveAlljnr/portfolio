@@ -1,4 +1,4 @@
-﻿import { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useInView, useMotionValue, useTransform, useSpring } from 'framer-motion'
 import { useCursor } from './Cursor'
 
@@ -19,7 +19,7 @@ const PROJECTS = [
     id: 'nintendo-ops',
     type: 'BUSINESS OPERATIONS / ANALYSIS',
     title: 'Nintendo Co. Analysis.',
-    description: 'A deep operational and systems study of Nintendo for my diploma â€” supply chain, IP management, and digital distribution â€” focused on where process quietly gets in the way.',
+    description: 'A deep operational and systems study of Nintendo for my diploma — supply chain, IP management, and digital distribution — focused on where process quietly gets in the way.',
     result: 'Scored a distinction and was picked for the department showcase.',
     stack: ['Systems Analysis', 'ERP Strategy', 'Operations Research', 'Business Process Modelling'],
     accent: '#ff3ca6',
@@ -31,7 +31,7 @@ const PROJECTS = [
     id: 'fintech-platform',
     type: 'FINTECH / PAYMENT INFRASTRUCTURE',
     title: 'Micro-Transactions Platform.',
-    description: 'A prototype payment architecture aimed at African mobile-money markets â€” event-driven microservices, idempotent retries, and a live transaction dashboard.',
+    description: 'A prototype payment architecture aimed at African mobile-money markets — event-driven microservices, idempotent retries, and a live transaction dashboard.',
     result: 'In a load test it held 10k+ simulated transactions a minute without breaking a sweat.',
     stack: ['Node.js', 'PostgreSQL', 'Redis', 'WebSockets', 'Docker'],
     accent: '#9b5cff',
@@ -54,50 +54,50 @@ const PROJECTS = [
   {
     id: 'sissys-store',
     type: 'E-COMMERCE / FASHION RETAIL',
-    title: 'Sissyâ€™s Luxury Storefront.',
-    description: 'A full storefront for Sissyâ€™s Luxury â€” product catalogue with categories, live shopping in Ghanaian cedis, user accounts, and a checkout the shop actually processes money through.',
+    title: 'Sissy’s Luxury Storefront.',
+    description: 'A full storefront for Sissy’s Luxury — product catalogue with categories, live shopping in Ghanaian cedis, user accounts, and a checkout the shop actually processes money through.',
     result: 'The store handles real orders with Paystack; adding a product to the shop takes minutes, not a developer.',
     stack: ['React', 'Next.js', 'TypeScript', 'Paystack', 'Node.js'],
     accent: '#2879ff',
     link: 'https://sissys-luxury.vercel.app/',
     year: '2025',
-    image: '/projects/sissys-luxury.jpg',
+    image: '/projects/sissys-luxury.png',
   },
   {
     id: 'sissys-editorial',
     type: 'E-COMMERCE / EDITORIAL BRAND',
-    title: 'Sissyâ€™s Luxury Brand Site.',
-    description: 'The brand home â€” Italian-crafted fashion presented as an editorial experience, with collection pages, product details, and the story of the house.',
+    title: 'Sissy’s Luxury Brand Site.',
+    description: 'The brand home — Italian-crafted fashion presented as an editorial experience, with collection pages, product details, and the story of the house.',
     result: 'A site that feels like the product: hand-finished, precise, and a little unreachable.',
     stack: ['HTML', 'CSS', 'JavaScript', 'Responsive Design'],
     accent: '#ff3ca6',
     link: 'https://wig-blush.vercel.app/',
     year: '2025',
-    image: '/projects/wig-blush.jpg',
+    image: '/projects/wig-blush.png',
   },
   {
     id: 'ubuntu-essence',
     type: 'PUBLISHING / CONTENT PLATFORM',
     title: 'Ubuntu Essence Magazine.',
-    description: 'A full digital magazine for African culture and heritage â€” categories, editorâ€™s picks, bookmarked reading, and account login for a personalised feed.',
+    description: 'A full digital magazine for African culture and heritage — categories, editor’s picks, bookmarked reading, and account login for a personalised feed.',
     result: 'A real publication site: writers publish stories across sections and readers come back to read from where they left off.',
     stack: ['React', 'Node.js', 'MongoDB', 'Auth', 'Responsive Design'],
     accent: '#ff7a2f',
     link: 'https://magazine-for-articles.vercel.app/',
     year: '2025',
-    image: '/projects/ubuntu-essence.jpg',
+    image: '/projects/ubuntu-essence.png',
   },
   {
     id: 'mikayla-portfolio',
     type: 'PORTFOLIO / CONTENT STUDIO',
-    title: 'Michaellaâ€™s Portfolio.',
-    description: 'A writerâ€™s portfolio for content and copywriting â€” essays, advocacy writing, selected works, and a downloadable CV, all arranged around the work itself.',
-    result: 'The CV lives on the site instead of an attachment â€” clients read the work, then book the writer.',
+    title: 'Michaella’s Portfolio.',
+    description: 'A writer’s portfolio for content and copywriting — essays, advocacy writing, selected works, and a downloadable CV, all arranged around the work itself.',
+    result: 'The CV lives on the site instead of an attachment — clients read the work, then book the writer.',
     stack: ['React', 'TypeScript', 'Framer Motion', 'Responsive Design'],
     accent: '#9b5cff',
     link: 'https://mikayla-s-portfolio.vercel.app/',
     year: '2025',
-    image: '/projects/mikayla-portfolio.jpg',
+    image: '/projects/mikayla-portfolio.png',
   },
 ]
 
@@ -168,8 +168,6 @@ function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: n
         <img
           src={project.image}
           alt={project.title}
-          loading="lazy"
-          decoding="async"
           style={{
             position: 'absolute', inset: 0,
             width: '100%', height: '100%',
@@ -206,7 +204,7 @@ function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: n
             color: 'var(--color-lime)',
             marginBottom: 12,
           }}>
-            {project.type} Â· {project.year}
+            {project.type} · {project.year}
           </div>
 
           <h3 style={{
@@ -243,7 +241,7 @@ function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: n
             color: 'var(--color-lime)',
             width: 'fit-content',
           }}>
-            âœ¦ {project.result}
+            ✦ {project.result}
           </div>
 
           {/* Stack tags */}
@@ -332,7 +330,7 @@ export default function Projects() {
               transition: 'color 0.2s, border-color 0.2s',
             }}
           >
-            View All on GitHub â†’
+            View All on GitHub →
           </a>
         </motion.div>
       </div>

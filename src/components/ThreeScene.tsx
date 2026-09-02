@@ -1,147 +1,184 @@
-import { useEffect, useRef } from 'react'
-import { useReducedMotion } from 'framer-motion'
+import { useRef, useMemo } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
 import { useTheme } from './ThemeProvider'
 
-const PARTICLE_COUNT = 90
+const PARTICLE_COUNT = 600
+const BOUNDARY_X = 12
+const BOUNDARY_Y = 8
+const BOUNDARY_Z = 6
 
-export default function ThreeScene() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const prefersReduced = useReducedMotion()
+function ParticleNetwork() {
+  const pointsRef = useRef<THREE.Points>(null)
+  const linesRef = useRef<THREE.LineSegments>(null)
+  const mouseRef = useRef({ x: 0, y: 0 })
   const { accent } = useTheme()
 
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    let width = 0
-    let height = 0
-    let raf = 0
-    const mouse = { x: -9999, y: -9999 }
-    let particles: { x: number; y: number; vx: number; vy: number }[] = []
-
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
-      width = canvas.clientWidth
-      height = canvas.clientHeight
-      canvas.width = Math.floor(width * dpr)
-      canvas.height = Math.floor(height * dpr)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-
-      particles = Array.from({ length: PARTICLE_COUNT }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-      }))
+  // Generate initial particle data once
+  const { positions, velocities, linePositions } = useMemo(() => {
+    const positions = new Float32Array(PARTICLE_COUNT * 3)
+    const velocities = new Float32Array(PARTICLE_COUNT * 3)
+    const linePositions = new Float32Array(PARTICLE_COUNT * PARTICLE_COUNT * 6)
+    
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * BOUNDARY_X * 2
+      positions[i * 3 + 1] = (Math.random() - 0.5) * BOUNDARY_Y * 2
+      positions[i * 3 + 2] = (Math.random() - 0.5) * BOUNDARY_Z * 2
+      
+      velocities[i * 3] = (Math.random() - 0.5) * 0.02
+      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.02
+      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.02
     }
+    
+    return { positions, velocities, linePositions }
+  }, [])
 
-    const onMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect()
-      mouse.x = e.clientX - rect.left
-      mouse.y = e.clientY - rect.top
+  // Mouse tracking
+  useMemo(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1
+      mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1
     }
-    const onLeave = () => {
-      mouse.x = -9999
-      mouse.y = -9999
-    }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
 
-    const draw = () => {
-      ctx.clearRect(0, 0, width, height)
-
-      // connections
-      ctx.lineWidth = 0.6
-      for (let i = 0; i < particles.length; i++) {
-        const a = particles[i]
-        for (let j = i + 1; j < particles.length; j++) {
-          const b = particles[j]
-          const dx = a.x - b.x
-          const dy = a.y - b.y
-          const distSq = dx * dx + dy * dy
-          const maxDist = 130
-          if (distSq < maxDist * maxDist) {
-            const alpha = (1 - Math.sqrt(distSq) / maxDist) * 0.35
-            ctx.strokeStyle = accent(2)
-            ctx.globalAlpha = alpha
-            ctx.beginPath()
-            ctx.moveTo(a.x, a.y)
-            ctx.lineTo(b.x, b.y)
-            ctx.stroke()
-          }
+  useFrame((state) => {
+    if (!pointsRef.current || !linesRef.current) return
+    
+    const t = state.clock.elapsedTime
+    const positionsAttr = pointsRef.current.geometry.attributes.position as THREE.BufferAttribute
+    const positionsArray = positionsAttr.array as Float32Array
+    const lineGeom = linesRef.current.geometry
+    const lineArray = lineGeom.attributes.position.array as Float32Array
+    
+    let lineIndex = 0
+    
+    // Update particle positions with flocking
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const i3 = i * 3
+      let x = positionsArray[i3]
+      let y = positionsArray[i3 + 1]
+      let z = positionsArray[i3 + 2]
+      
+      // Mouse repulsion
+      const mouseWorldX = mouseRef.current.x * 10
+      const mouseWorldY = mouseRef.current.y * 6
+      const dxMouse = x - mouseWorldX
+      const dyMouse = y - mouseWorldY
+      const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse)
+      if (distMouse < 5 && distMouse > 0) {
+        const force = 0.03 / distMouse
+        velocities[i3] += dxMouse * force
+        velocities[i3 + 1] += dyMouse * force
+      }
+      
+      // Gentle drift based on time
+      velocities[i3] += Math.sin(t * 0.3 + i * 0.1) * 0.0008
+      velocities[i3 + 1] += Math.cos(t * 0.4 + i * 0.15) * 0.0008
+      velocities[i3 + 2] += Math.sin(t * 0.2 + i * 0.2) * 0.0004
+      
+      // Damping
+      velocities[i3] *= 0.98
+      velocities[i3 + 1] *= 0.98
+      velocities[i3 + 2] *= 0.98
+      
+      // Update position
+      x += velocities[i3]
+      y += velocities[i3 + 1]
+      z += velocities[i3 + 2]
+      
+      // Boundary reflection
+      if (Math.abs(x) > BOUNDARY_X) { velocities[i3] *= -0.5; x = Math.sign(x) * BOUNDARY_X }
+      if (Math.abs(y) > BOUNDARY_Y) { velocities[i3 + 1] *= -0.5; y = Math.sign(y) * BOUNDARY_Y }
+      if (Math.abs(z) > BOUNDARY_Z) { velocities[i3 + 2] *= -0.5; z = Math.sign(z) * BOUNDARY_Z }
+      
+      positionsArray[i3] = x
+      positionsArray[i3 + 1] = y
+      positionsArray[i3 + 2] = z
+      
+      // Build connections to nearby particles
+      for (let j = i + 1; j < PARTICLE_COUNT; j++) {
+        const j3 = j * 3
+        const dx = x - positionsArray[j3]
+        const dy = y - positionsArray[j3 + 1]
+        const dz = z - positionsArray[j3 + 2]
+        const distSq = dx * dx + dy * dy + dz * dz
+        
+        if (distSq < 16 && lineIndex < lineArray.length - 6) {
+          lineArray[lineIndex++] = x
+          lineArray[lineIndex++] = y
+          lineArray[lineIndex++] = z
+          lineArray[lineIndex++] = positionsArray[j3]
+          lineArray[lineIndex++] = positionsArray[j3 + 1]
+          lineArray[lineIndex++] = positionsArray[j3 + 2]
         }
       }
-      ctx.globalAlpha = 1
-
-      // particles
-      ctx.fillStyle = accent(1)
-      for (const p of particles) {
-        ctx.globalAlpha = 0.9
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, 1.4, 0, Math.PI * 2)
-        ctx.fill()
-      }
-      ctx.globalAlpha = 1
     }
-
-    const update = () => {
-      for (const p of particles) {
-        // gentle drift
-        p.vx *= 0.98
-        p.vy *= 0.98
-        p.vx += (Math.random() - 0.5) * 0.02
-        p.vy += (Math.random() - 0.5) * 0.02
-
-        // mouse repulsion
-        const dx = p.x - mouse.x
-        const dy = p.y - mouse.y
-        const d = Math.sqrt(dx * dx + dy * dy)
-        if (d < 90 && d > 0.01) {
-          const force = 0.06 / d
-          p.vx += (dx / d) * force
-          p.vy += (dy / d) * force
-        }
-
-        p.x += p.vx
-        p.y += p.vy
-
-        if (p.x < 0) p.x = width
-        if (p.x > width) p.x = 0
-        if (p.y < 0) p.y = height
-        if (p.y > height) p.y = 0
-      }
+    
+    // Zero out unused line vertices
+    for (let i = lineIndex; i < lineArray.length; i++) {
+      lineArray[i] = 0
     }
-
-    const loop = () => {
-      update()
-      draw()
-      raf = requestAnimationFrame(loop)
+    
+    positionsAttr.needsUpdate = true
+    lineGeom.attributes.position.needsUpdate = true
+    lineGeom.setDrawRange(0, lineIndex / 3)
+    
+    // Gentle rotation
+    if (pointsRef.current.parent) {
+      pointsRef.current.parent.rotation.y = t * 0.05
     }
-
-    resize()
-    if (prefersReduced) {
-      draw()
-    } else {
-      loop()
-    }
-
-    window.addEventListener('resize', resize)
-    window.addEventListener('mousemove', onMove)
-    window.addEventListener('mouseout', onLeave)
-
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('resize', resize)
-      window.removeEventListener('mousemove', onMove)
-      window.removeEventListener('mouseout', onLeave)
-    }
-  }, [prefersReduced, accent])
+  })
 
   return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden="true"
-      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
-    />
+    <group>
+      <points ref={pointsRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[positions, 3]}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          size={0.08}
+          color={accent(1)}
+          transparent
+          opacity={0.9}
+          sizeAttenuation
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </points>
+      
+      <lineSegments ref={linesRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[linePositions, 3]}
+          />
+        </bufferGeometry>
+        <lineBasicMaterial
+          color={accent(2)}
+          transparent
+          opacity={0.25}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </lineSegments>
+    </group>
+  )
+}
+
+export default function ThreeScene() {
+  return (
+    <Canvas
+      dpr={[1, 1.5]}
+      camera={{ position: [0, 0, 18], fov: 50 }}
+      style={{ position: 'absolute', inset: 0 }}
+      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+    >
+      <ParticleNetwork />
+    </Canvas>
   )
 }
