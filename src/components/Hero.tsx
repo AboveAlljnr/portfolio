@@ -1,12 +1,9 @@
-import { Suspense, lazy } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import type { Variants } from 'framer-motion'
 import { Magnetic, useCursor } from './Cursor'
 import { useIsMobile } from '../hooks/useIsMobile'
 import ErrorBoundary from './ErrorBoundary'
-import { supportsWebGL } from '../hooks/webgl'
-
-const ThreeScene = lazy(() => import('./ThreeScene'))
+import ThreeScene from './ThreeScene'
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
@@ -61,12 +58,10 @@ export default function Hero() {
         overflow: 'hidden',
       }}
     >
-      {/* Three.js Canvas Background */}
+      {/* Particle Network Background */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 1, opacity: 0.7 }}>
         <ErrorBoundary>
-          <Suspense fallback={null}>
-            {!prefersReduced && supportsWebGL() && <ThreeScene />}
-          </Suspense>
+          {!prefersReduced && <ThreeScene />}
         </ErrorBoundary>
       </div>
 
