@@ -75,6 +75,30 @@ const PROJECTS = [
     year: '2025',
     image: '/projects/wig-blush.png',
   },
+  {
+    id: 'ubuntu-essence',
+    type: 'PUBLISHING / CONTENT PLATFORM',
+    title: 'Ubuntu Essence Magazine.',
+    description: 'A full digital magazine for African culture and heritage — categories, editor’s picks, bookmarked reading, and account login for a personalised feed.',
+    result: 'A real publication site: writers publish stories across sections and readers come back to read from where they left off.',
+    stack: ['React', 'Node.js', 'MongoDB', 'Auth', 'Responsive Design'],
+    accent: '#ff7a2f',
+    link: 'https://magazine-for-articles.vercel.app/',
+    year: '2025',
+    image: '/projects/ubuntu-essence.png',
+  },
+  {
+    id: 'mikayla-portfolio',
+    type: 'PORTFOLIO / CONTENT STUDIO',
+    title: 'Michaella’s Portfolio.',
+    description: 'A writer’s portfolio for content and copywriting — essays, advocacy writing, selected works, and a downloadable CV, all arranged around the work itself.',
+    result: 'The CV lives on the site instead of an attachment — clients read the work, then book the writer.',
+    stack: ['React', 'TypeScript', 'Framer Motion', 'Responsive Design'],
+    accent: '#9b5cff',
+    link: 'https://mikayla-s-portfolio.vercel.app/',
+    year: '2025',
+    image: '/projects/mikayla-portfolio.png',
+  },
 ]
 
 function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: number }) {
