@@ -51,12 +51,36 @@ const PROJECTS = [
     year: '2023',
     image: 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg',
   },
+  {
+    id: 'sissys-store',
+    type: 'E-COMMERCE / FASHION RETAIL',
+    title: 'Sissy’s Luxury Storefront.',
+    description: 'A full storefront for Sissy’s Luxury — product catalogue with categories, live shopping in Ghanaian cedis, user accounts, and a checkout the shop actually processes money through.',
+    result: 'The store handles real orders with Paystack; adding a product to the shop takes minutes, not a developer.',
+    stack: ['React', 'Next.js', 'TypeScript', 'Paystack', 'Node.js'],
+    accent: '#2879ff',
+    link: 'https://sissys-luxury.vercel.app/',
+    year: '2025',
+    image: '/projects/sissys-luxury.png',
+  },
+  {
+    id: 'sissys-editorial',
+    type: 'E-COMMERCE / EDITORIAL BRAND',
+    title: 'Sissy’s Luxury Brand Site.',
+    description: 'The brand home — Italian-crafted fashion presented as an editorial experience, with collection pages, product details, and the story of the house.',
+    result: 'A site that feels like the product: hand-finished, precise, and a little unreachable.',
+    stack: ['HTML', 'CSS', 'JavaScript', 'Responsive Design'],
+    accent: '#ff3ca6',
+    link: 'https://wig-blush.vercel.app/',
+    year: '2025',
+    image: '/projects/wig-blush.png',
+  },
 ]
 
 function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: number }) {
   const { setVariant, setLabel } = useCursor()
   const [hovered, setHovered] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLAnchorElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-80px' })
 
   const x = useMotionValue(0)
@@ -84,16 +108,19 @@ function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: n
   }
 
   return (
-    <motion.div
+    <motion.a
       ref={ref}
+      href={project.link}
+      target="_blank"
+      rel="noopener noreferrer"
       initial={{ opacity: 0, y: 60 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-      style={{ perspective: 1200 }}
+      style={{ perspective: 1200, display: 'block', cursor: 'none' }}
     >
       <motion.div
         onMouseMove={handleMouseMove}
-        onMouseEnter={() => { setHovered(true); setVariant('project'); setLabel('VIEW') }}
+        onMouseEnter={() => { setHovered(true); setVariant('project'); setLabel('VIEW SITE') }}
         onMouseLeave={handleMouseLeave}
         style={{
           rotateX: springRotX,
@@ -209,7 +236,7 @@ function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: n
           </div>
         </motion.div>
       </motion.div>
-    </motion.div>
+    </motion.a>
   )
 }
 
